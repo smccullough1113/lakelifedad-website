@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f3">
+  <meta name="description" content="Estimate jet ski fuel use for a planned distance or calculate a fuel target with an emergency allowance.">
+  <title>Jet Ski Fuel &amp; Range Calculator | Lake Life Dad</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/jetski-fuel.css">
+  <script src="../js/jetski-fuel.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html#home" aria-label="Lake Life Dad home"><span class="brand-mark" aria-hidden="true">〰</span><span class="brand-name">LAKE LIFE <b>DAD</b></span></a>
+      <nav class="primary-navigation tool-navigation" aria-label="Main navigation">
+        <a href="../index.html#projects">More projects</a>
+        <a class="nav-cta" href="../index.html">Lake Life Dad <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="tool-intro">
+      <div class="page-width">
+        <a class="tool-back" href="../index.html#projects"><span aria-hidden="true">←</span> Back to projects</a>
+        <p class="eyebrow"><i></i> Lake Life Dad · Working beta</p>
+        <h1>Fuel &amp; Range<br><em>Estimator</em></h1>
+        <p>Estimate fuel for a planned distance or calculate a fuel target with an emergency allowance.</p>
+      </div>
+    </section>
+    <section class="calculator-section" aria-labelledby="calculator-title">
+      <div class="page-width calculator-layout">
+        <div class="calculator-card">
+          <div class="calculator-heading">
+            <div><p class="eyebrow dark-eyebrow"><i></i> 01 · Trip details</p><h2 id="calculator-title">Plan a ride</h2></div>
+            <span class="beta-pill">BETA</span>
+          </div>
+          <form id="fuel-form">
+            <fieldset class="trip-mode-picker">
+              <legend>What do you want to calculate?</legend>
+              <label class="trip-mode-option">
+                <input type="radio" name="trip-mode" value="check" checked>
+                <span><strong>Check fuel for a distance</strong><small>See trip fuel, how much you have, and what more you may need to bring.</small></span>
+              </label>
+              <label class="trip-mode-option">
+                <input type="radio" name="trip-mode" value="plan">
+                <span><strong>Plan fuel to bring</strong><small>Set a distance and include one-third extra fuel for emergencies.</small></span>
+              </label>
+            </fieldset>
+            <div class="field-grid">
+              <label class="field">
+                <span>Distance (miles)</span>
+                <span class="field-control"><input name="distance" type="number" min="0.1" max="100000" step="0.1" inputmode="decimal" placeholder="e.g. 25" required><span>mi</span></span>
+                <small>Enter the distance you want to check.</small>
+              </label>
+              <label class="field" id="available-field">
+                <span>Fuel currently onboard (US gallons)</span>
+                <span class="field-control"><input name="available" type="number" min="0.1" max="10000" step="0.1" inputmode="decimal" placeholder="e.g. 8"><span>gal</span></span>
+                <small>Enter your current fuel amount before setting aside the reserve below.</small>
+              </label>
+              <label class="field">
+                <span>Reserve fuel preference (US gallons)</span>
+                <span class="field-control"><input name="reserve" type="number" min="0" max="10000" step="0.1" inputmode="decimal" value="0" placeholder="e.g. 2" required><span>gal</span></span>
+                <small>Set aside the amount you want to keep unused. Change it to match your ride.</small>
+              </label>
+              <label class="field">
+                <span>How do you estimate fuel use?</span>
+                <span class="field-control select-control">
+                  <select id="calculation-mode" name="economy-mode">
+                    <option value="mpg">Miles per gallon</option>
+                    <option value="gph">Gallons per hour</option>
+                  </select>
+                </span>
+                <small>Choose the fuel-use measure you know.</small>
+              </label>
+              <label class="field economy-field" id="mpg-field">
+                <span>Observed fuel economy (miles per gallon)</span>
+                <span class="field-control"><input name="mpg" type="number" min="0.1" max="1000" step="0.1" inputmode="decimal" value="5.2" required><span>mi/gal</span></span>
+                <small>Starts at about 5.2 mi/gal based on your ride logs. Change it to fit the ski and conditions.</small>
+              </label>
+              <label class="field economy-field" id="gph-field" hidden>
+                <span>Fuel burn rate</span>
+                <span class="field-control"><input name="burn" type="number" min="0.1" max="1000" step="0.1" inputmode="decimal" placeholder="e.g. 5" disabled required><span>gal/hr</span></span>
+                <small>Your typical riding consumption per hour.</small>
+              </label>
+              <label class="field economy-field" id="speed-field" hidden>
+                <span>Average riding speed</span>
+                <span class="field-control"><input name="speed" type="number" min="0.1" max="200" step="0.1" inputmode="decimal" placeholder="e.g. 30" disabled required><span>mph</span></span>
+                <small>Used to convert hourly burn into fuel per mile.</small>
+              </label>
+            </div>
+            <p class="form-error" id="form-error" role="alert" hidden></p>
+            <div class="form-actions"><button class="button calculate-button" type="submit">Estimate <span aria-hidden="true">→</span></button><button class="clear-button" type="reset">Clear</button></div>
+          </form>
+          <p class="calculator-disclaimer"><span aria-hidden="true">i</span> Planning estimate only. Real fuel use changes with speed, load, water, weather, and riding style. Keep a conservative reserve and verify the route independently.</p>
+        </div>
+        <section class="results-card" aria-labelledby="results-title" aria-live="polite" aria-atomic="true">
+          <div class="results-heading">
+            <div><p class="eyebrow"><i></i> 02 · Estimate results</p><h2 id="results-title">Your ride outlook</h2></div>
+            <span class="result-status" id="result-status" hidden></span>
+          </div>
+          <p class="results-intro">Enter a distance and fuel estimate to see your trip numbers.</p>
+          <div class="results-values" hidden>
+            <div class="result-primary"><span id="primary-label">Total fuel target</span><strong id="primary-result">—</strong><small id="primary-note"></small></div>
+            <div class="result-breakdown">
+              <div><span id="secondary-label-one">Trip fuel needed</span><strong id="secondary-result-one">—</strong></div>
+              <div><span id="secondary-label-two">Fuel currently onboard</span><strong id="secondary-result-two">—</strong></div>
+              <div><span id="secondary-label-three">More fuel to bring</span><strong id="secondary-result-three">—</strong></div>
+              <div><span>Reserve set aside</span><strong id="reserve-result">—</strong></div>
+              <div><span>Emergency allowance</span><strong id="emergency-result">—</strong></div>
+            </div>
+            <div class="result-metrics">
+              <div><span>Estimated range</span><strong id="range-result">—</strong></div>
+              <div><span>Estimated ride time</span><strong id="ride-time-result">—</strong></div>
+              <div><span>Fuel economy</span><strong id="economy-result">—</strong></div>
+            </div>
+            <p class="results-footnote" id="results-footnote"></p>
+          </div>
+          <div class="result-decoration" aria-hidden="true"><span></span><span></span><span></span></div>
+        </section>
+      </div>
+    </section>
+    <section class="how-section">
+      <div class="page-width how-inner">
+        <p class="eyebrow dark-eyebrow"><i></i> How estimates work</p>
+        <p>Fuel use is estimated from trip distance and observed fuel economy. In gallons-per-hour mode, hourly burn is converted to gallons per mile using your average riding speed. Your target includes the fuel for the trip and your reserve preference; “Plan fuel to bring” adds one-third of trip fuel for emergencies. The result compares that target with the fuel currently onboard.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="page-width footer-main"><a class="brand footer-brand" href="../index.html#home" aria-label="Lake Life Dad home"><span class="brand-mark" aria-hidden="true">〰</span><span class="brand-name">LAKE LIFE <b>DAD</b></span></a><p>Here for the good days, and the stories that come with them.</p><a class="back-top" href="#main">Back to top <span aria-hidden="true">↑</span></a></div>
+    <div class="page-width footer-bottom"><span>© <span id="current-year">2026</span> Lake Life Dad · Steve McCullough</span><span>Made for lake days &amp; family ways <b aria-hidden="true">✳</b></span></div>
+  </footer>
+</body>
+</html>
